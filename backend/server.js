@@ -11,10 +11,13 @@ app.use(cors(corsOptions));
 app.use(express.json());
 const PORT = process.env.PORT || 5000;
 conectDB();
-app.get("/", (req, res) => {
-  res.send("home page");
-  console.log("home page");
-});
+// app.get("/", (req, res) => {
+//   res.send("home page");
+//   console.log("home page");
+// });
+app.use("/auth", require("./routes/UserRoute"));
+app.use("/message", require("./routes/messageRoute"));
+
 mongoose.connection.once("open", () => {
   console.log("conection succefull");
   app.listen(PORT, () => {
