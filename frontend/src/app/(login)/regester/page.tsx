@@ -1,5 +1,7 @@
 "use client";
+import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 type regesterDta = {
@@ -10,6 +12,8 @@ type regesterDta = {
 };
 
 export default function page() {
+  const router = useRouter();
+  const API_PATH = process.env.NEXT_PUBLIC_API_PATH;
   const [data, SetData] = useState<regesterDta>({
     nom: "",
     prenom: "",
@@ -20,6 +24,8 @@ export default function page() {
     e.preventDefault();
 
     try {
+      axios.post(`${API_PATH}/auth/regester`, data);
+      router.push("/");
       console.log(data);
     } catch (err) {
       console.log(err);

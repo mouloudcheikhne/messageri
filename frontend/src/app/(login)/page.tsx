@@ -1,6 +1,8 @@
 "use client";
+import axios from "axios";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 type loginData = {
   email: string;
   password: string;
@@ -9,20 +11,32 @@ type responceLogin = {
   nom: string;
   prenom: string;
   email: string;
+  role: string;
   token: string;
 };
-
+const API_PATH = process.env.NEXT_PUBLIC_API_PATH;
 export default function page() {
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      router.push("/messagere");
+    }
+  }, []);
+  const router = useRouter();
   const [formData, setFormData] = useState<loginData>({
     email: "",
     password: "",
   });
+  // console.log("api path === ", API_PATH);
   const [data, SetData] = useState<responceLogin>();
-  const handelsubmit = (e) => {
+  const handelsubmit = async (e) => {
     e.preventDefault();
 
     try {
-      console.log(formData);
+      const responce = await axios.post(`${API_PATH}/auth/login`, formData);
+      console.log(responce.data);
+      SetData(responce.data);
+      localStorage.setItem("user", JSON.stringify(responce.data));
+      router.push("/messagere");
     } catch (err) {
       console.log(err);
     }
