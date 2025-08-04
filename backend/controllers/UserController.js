@@ -54,6 +54,37 @@ const login = async (req, res) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
     sameSite: "None",
   });
-  return res.json({ userFound: userFound, token: token });
+  //   {
+  //   "userFound": {
+  //     "_id": "688a7610897f3dfe7f63c449",
+  //     "nom": "sidi",
+  //     "prenom": "sidi",
+  //     "email": "sidi@gmail.com",
+  //     "password": "$2b$10$nXFzSottzAK1dfuVdIIQpeBzcMj7RMt2FXE55LMqCmDDC31/mdLPG",
+  //     "role": "USER",
+  //     "__v": 0
+  //   },
+  //   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySW5mb3MiOnsidXNlcklEIjoiNjg4YTc2MTA4OTdmM2RmZTdmNjNjNDQ5IiwidXNlcmVtYWlsIjoic2lkaUBnbWFpbC5jb20ifSwiaWF0IjoxNzUzOTA5NzI5LCJleHAiOjE3NTM5MTA2Mjl9.IMqp9Z80dT6A7d-msSiQzaql1jpbgPC4-EobiAZsX-s"
+  // }
+  const resulta = {
+    nom: userFound.nom,
+    prenom: userFound.prenom,
+    email: userFound.email,
+    role: userFound.role,
+    token,
+  };
+  return res.json(resulta);
 };
-module.exports = { regester, login };
+const filter_with_email = async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(401).json({ message: "the fields are empty" });
+  const foundUser = await User.findOne({ email: email });
+  if (!foundUser) return res.status(401).json({ message: "user not found" });
+  const result = {
+    nom: foundUser.nom,
+    prenom: foundUser.prenom,
+    email: foundUser.email,
+  };
+  return res.status(200).json(result);
+};
+module.exports = { regester, login, filter_with_email };

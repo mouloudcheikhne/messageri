@@ -83,6 +83,7 @@ const filter_message = async (req, res) => {
       ],
     });
     const fikter_messages = messages.map((message) => ({
+      id: message._id,
       contenu: message.contenu,
       userSender: message.userSender.email,
       userresorve: message.userresorve.email,
