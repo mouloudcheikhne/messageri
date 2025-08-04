@@ -16,6 +16,7 @@ type responceLogin = {
 };
 const API_PATH = process.env.NEXT_PUBLIC_API_PATH;
 export default function page() {
+  const [Mangeerror, seterror] = useState("");
   useEffect(() => {
     if (localStorage.getItem("user")) {
       router.push("/messagere");
@@ -35,18 +36,35 @@ export default function page() {
       const responce = await axios.post(`${API_PATH}/auth/login`, formData);
       console.log(responce.data);
       SetData(responce.data);
-      localStorage.setItem("user", JSON.stringify(responce.data));
+      const date_conect = new Date();
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          nom: responce.data.nom,
+          prenom: responce.data.prenom,
+          email: responce.data.email,
+          role: responce.data.role,
+          token: responce.data.token,
+          date_conect: date_conect.toISOString(),
+        })
+      );
+      seterror("");
       router.push("/messagere");
     } catch (err) {
+      seterror("email or password not corect");
       console.log(err);
     }
   };
   return (
     <div className=" container flex justify-center items-center h-screen   ">
-      <div className="w-full md:w-[400px] h-[350px] bg-gray-300 px-4 py-6  rounded-md">
+      <div className="w-full md:w-[400px] h-[370px] bg-gray-300 px-4 py-6  rounded-md">
         <p className="text-black font-light font-serif  text-2xl   text-center w-full p-5 bg-gray-200 rounded-md">
           Authentifiction
         </p>
+        {Mangeerror && (
+          <p className="bg-red-300 p-2 rounded-md mt-2 mx-3">{Mangeerror}</p>
+        )}
+
         <form action="" onSubmit={handelsubmit}>
           <div className=" flex flex-col  ">
             {/* <label htmlFor="" className="mx-2 p-2">
